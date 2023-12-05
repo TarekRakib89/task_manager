@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_assign/ui/screens/LoginScreen.dart';
 import 'package:task_manager_assign/ui/screens/pin_verificationscreen.dart';
 import 'package:task_manager_assign/ui/widgets/body_background.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  TextEditingController emailTextEditingController = TextEditingController();
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,27 +26,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     height: 80,
                   ),
                   Text(
-                    'Your Email Address',
+                    'Set Password',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   const Text(
-                    'A 6 digit OTP will be sent to your email address',
+                    'Minimum password length should be more than 8 letters',
                     style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        color: Colors.grey, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
                     height: 24,
                   ),
                   TextFormField(
-                    controller: emailTextEditingController,
-                    keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      hintText: 'Email',
+                      hintText: 'Password',
+                    ),
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Confirm Password',
                     ),
                   ),
                   const SizedBox(
@@ -62,34 +63,36 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 builder: (context) =>
                                     const PinVerificationScreen()));
                       },
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                      ),
+                      child: const Text('Confirm'),
                     ),
                   ),
                   const SizedBox(
                     height: 48,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Have an account?",
+                        "Have an Account?",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black54),
+                            color: Colors.black45),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
+                                (route) => false);
+                          },
+                          child: const Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ))
                     ],
                   ),
                 ],
