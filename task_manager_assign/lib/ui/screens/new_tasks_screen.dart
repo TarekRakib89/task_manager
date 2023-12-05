@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_assign/data/models/task_count_summary_list_model.dart';
 import 'package:task_manager_assign/data/models/task_list_model.dart';
 import 'package:task_manager_assign/data/network_caller/network_caller.dart';
 import 'package:task_manager_assign/data/network_caller/network_response.dart';
 import 'package:task_manager_assign/data/utility/urls.dart';
+import 'package:task_manager_assign/ui/controllers/auth_controllers.dart';
 import 'package:task_manager_assign/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager_assign/ui/widgets/profile_summary_card.dart';
 import 'package:task_manager_assign/ui/widgets/summary_card.dart';
@@ -66,6 +68,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Get.find<AuthController>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {

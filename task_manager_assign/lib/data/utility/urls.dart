@@ -9,8 +9,14 @@ class Urls {
       '$_baseUrl/listTaskByStatus/Completed';
   static const String getProgressTasks = "$_baseUrl/listTaskByStatus/Progress";
   static const String getCancelledTask = '$_baseUrl/listTaskByStatus/Cancelled';
+  static const String resetPassword = '$_baseUrl/RecoverResetPass';
+  static const String updateProfile = '$_baseUrl/profileUpdate';
+
   static String recoverVerifyEmail(String email) =>
       "$_baseUrl/RecoverVerifyEmail/$email";
+
+  static String recoverVerifyOtp(String email, String pinCode) =>
+      "$_baseUrl/RecoverVerifyOTP/$email/$pinCode";
 
   static String updateTaskStatus(String taskId, String status) =>
       '$_baseUrl/updateTaskStatus/$taskId/$status';

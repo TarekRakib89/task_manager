@@ -13,7 +13,7 @@ class NetworkCaller {
     try {
       debugPrint(AuthController.token.toString());
       final Response response = await post(
-        Uri.parse(url),
+        Uri.parse("print $url"),
         body: jsonEncode(body),
         headers: {
           'Content-type': 'Application/json',
@@ -77,6 +77,122 @@ class NetworkCaller {
             isSuccess: false,
             statusCode: response.statusCode,
             jsonResponse: jsonDecode(response.body));
+      }
+    } catch (e) {
+      return NetworkResponse(
+        isSuccess: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<NetworkResponse> getEmailVerification(String url) async {
+    try {
+      debugPrint(url);
+      final Response response = await get(
+        Uri.parse(url),
+      );
+      if (response.statusCode == 200) {
+        return NetworkResponse(
+          isSuccess: true,
+          jsonResponse: jsonDecode(response.body),
+          statusCode: 200,
+        );
+      } else if (response.statusCode == 401) {
+        backToLogin();
+        return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            jsonResponse: jsonDecode(response.body));
+      } else {
+        return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            jsonResponse: jsonDecode(response.body));
+      }
+    } catch (e) {
+      return NetworkResponse(
+        isSuccess: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<NetworkResponse> postRequestForRecoverVerifyOTP(String url,
+      {Map<String, dynamic>? body, bool isLogin = false}) async {
+    try {
+      debugPrint(url);
+      final Response response = await post(
+        Uri.parse(url),
+        body: jsonEncode(body),
+        headers: {
+          'Content-type': 'Application/json',
+        },
+      );
+      debugPrint(response.body);
+      if (response.statusCode == 200) {
+        debugPrint("yes password Changes");
+        return NetworkResponse(
+          isSuccess: true,
+          jsonResponse: jsonDecode(response.body),
+          statusCode: 200,
+        );
+      } else if (response.statusCode == 401) {
+        if (isLogin == false) {
+          backToLogin();
+        }
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          jsonResponse: jsonDecode(response.body),
+        );
+      } else {
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          jsonResponse: jsonDecode(response.body),
+        );
+      }
+    } catch (e) {
+      return NetworkResponse(
+        isSuccess: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<NetworkResponse> getRequestForRecoverVerifyOTP(String url,
+      {Map<String, dynamic>? body, bool isLogin = false}) async {
+    try {
+      debugPrint(url);
+      final Response response = await get(
+        Uri.parse(url),
+        headers: {
+          'Content-type': 'Application/json',
+        },
+      );
+      debugPrint(response.body);
+      if (response.statusCode == 200) {
+        return NetworkResponse(
+          isSuccess: true,
+          jsonResponse: jsonDecode(response.body),
+          statusCode: 200,
+        );
+      } else if (response.statusCode == 401) {
+        if (isLogin == false) {
+          backToLogin();
+        }
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          jsonResponse: jsonDecode(response.body),
+        );
+      } else {
+        return NetworkResponse(
+          isSuccess: false,
+          statusCode: response.statusCode,
+          jsonResponse: jsonDecode(response.body),
+        );
       }
     } catch (e) {
       return NetworkResponse(

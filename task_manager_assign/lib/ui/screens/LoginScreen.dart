@@ -4,6 +4,7 @@ import 'package:task_manager_assign/data/network_caller/network_caller.dart';
 import 'package:task_manager_assign/data/network_caller/network_response.dart';
 import 'package:task_manager_assign/data/utility/urls.dart';
 import 'package:task_manager_assign/ui/controllers/auth_controllers.dart';
+import 'package:task_manager_assign/ui/screens/forgot_password_screen.dart';
 import 'package:task_manager_assign/ui/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager_assign/ui/screens/sign_up_screens.dart';
 import 'package:task_manager_assign/ui/widgets/body_background.dart';
@@ -86,9 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: ElevatedButton(
                           onPressed: login,
-                          child: const Icon(
-                            Icons.arrow_circle_right_outlined,
-                          ),
+                          child: const Icon(Icons.arrow_circle_right_outlined),
                         ),
                       ),
                     ),
@@ -97,7 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Center(
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           'Forgot Password?',
                           style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -108,12 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Don't have an Account",
+                          "Don't have an account?",
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black54,
-                          ),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54),
                         ),
                         TextButton(
                           onPressed: () {
@@ -124,7 +130,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: const Text("Sign Up"),
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
                       ],
                     )
@@ -146,39 +155,33 @@ class _LoginScreenState extends State<LoginScreen> {
     if (mounted) {
       setState(() {});
     }
-    NetworkResponse response = await NetworkCaller().postRequest(
-      Urls.login,
-      body: {
-        'email': _emailTEController.text.trim(),
-        'password': _passwordTEController.text,
-      },
-      isLogin: true,
-    );
+    NetworkResponse response = await NetworkCaller().postRequest(Urls.login,
+        body: {
+          'email': _emailTEController.text.trim(),
+          'password': _passwordTEController.text,
+        },
+        isLogin: true);
     _loginInProgress = false;
     if (mounted) {
       setState(() {});
     }
     if (response.isSuccess) {
-      await AuthController.saveUserInformation(
-        response.jsonResponse['token'],
-        UserModel.fromJson(
-          response.jsonResponse['data'],
-        ),
-      );
+      await AuthController.saveUserInformation(response.jsonResponse['token'],
+          UserModel.fromJson(response.jsonResponse['data']));
       if (mounted) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => const MainBottomNavScreen()));
+      }
+    } else {
+      if (response.statusCode == 401) {
+        if (mounted) {
+          showSnackMessage(context, 'Please check email/password');
+        }
       } else {
-        if (response.statusCode == 401) {
-          if (mounted) {
-            showSnackMessage(context, 'Please check email/password');
-          }
-        } else {
-          if (mounted) {
-            showSnackMessage(context, 'Login failed. try agsin');
-          }
+        if (mounted) {
+          showSnackMessage(context, 'Login failed. Try again');
         }
       }
     }

@@ -1,11 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:task_manager_assign/ui/controllers/auth_controllers.dart';
 import 'package:task_manager_assign/ui/screens/LoginScreen.dart';
 import 'package:task_manager_assign/ui/screens/edit_profile_screen.dart';
 
-class ProfileSummaryCard extends StatefulWidget {
+class ProfileSummaryCard extends StatelessWidget {
   const ProfileSummaryCard({
     Key? key,
     this.enableOnTap = true,
@@ -14,15 +16,13 @@ class ProfileSummaryCard extends StatefulWidget {
   final bool enableOnTap;
 
   @override
-  State<ProfileSummaryCard> createState() => _ProfileSummaryCardState();
-}
-
-class _ProfileSummaryCardState extends State<ProfileSummaryCard> {
-  @override
   Widget build(BuildContext context) {
+    String imageBytes = AuthController.user?.photo ?? '';
+    Uint8List bytes = base64.decode(imageBytes.split(',').last);
+
     return ListTile(
       onTap: () {
-        if (widget.enableOnTap) {
+        if (enableOnTap) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -31,8 +31,16 @@ class _ProfileSummaryCardState extends State<ProfileSummaryCard> {
           );
         }
       },
-      leading: const CircleAvatar(
-        child: Icon(Icons.person),
+      leading: CircleAvatar(
+        child: AuthController.user?.photo == null
+            ? const Icon(Icons.person)
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                ),
+              ),
       ),
       title: Text(
         AuthController.user!.firstName ?? '',
@@ -44,7 +52,7 @@ class _ProfileSummaryCardState extends State<ProfileSummaryCard> {
         style: const TextStyle(color: Colors.white),
       ),
       trailing: GestureDetector(
-        onTap: () {
+        onTap: () async {
           AuthController.clearAuthData();
           Navigator.pushAndRemoveUntil(
               context,

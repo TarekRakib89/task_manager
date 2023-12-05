@@ -1,10 +1,20 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager_assign/data/network_caller/network_caller.dart';
+
+import 'package:task_manager_assign/data/network_caller/network_response.dart';
+import 'package:task_manager_assign/data/utility/urls.dart';
 import 'package:task_manager_assign/ui/screens/LoginScreen.dart';
+import 'package:task_manager_assign/ui/screens/reset_password.dart';
 import 'package:task_manager_assign/ui/widgets/body_background.dart';
 
 class PinVerificationScreen extends StatefulWidget {
-  const PinVerificationScreen({super.key});
+  const PinVerificationScreen({
+    Key? key,
+    required this.email,
+  }) : super(key: key);
+  final String email;
 
   @override
   State<PinVerificationScreen> createState() => _PinVerificationScreenState();
@@ -59,7 +69,15 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     animationDuration: const Duration(milliseconds: 300),
                     enableActiveFill: true,
                     onCompleted: (v) {
-                      debugPrint("Comleted");
+                      debugPrint("Comleted $v");
+                      _sendPinToServer(widget.email, v);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ResetPasswordScreen(
+                                    email: widget.email,
+                                    pinCode: v,
+                                  )));
                     },
                     onChanged: (value) {},
                     beforeTextPaste: (text) {
@@ -110,6 +128,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _sendPinToServer(String email, String value) async {
+    NetworkResponse response =
+        await NetworkCaller().getRequestForRecoverVerifyOTP(
+      Urls.recoverVerifyOtp(email, value),
     );
   }
 }
