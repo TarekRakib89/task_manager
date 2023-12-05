@@ -86,7 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: CircularProgressIndicator(),
                         ),
                         child: ElevatedButton(
-                          onPressed: login,
+                          onPressed: () {
+                            debugPrint("print x");
+                            login();
+                          },
                           child: const Icon(Icons.arrow_circle_right_outlined),
                         ),
                       ),

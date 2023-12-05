@@ -173,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Future<void> _signUp() async {
+  void _signUp() async {
     if (_formKey.currentState!.validate()) {
       _signUpInProgress = true;
       if (mounted) {
